@@ -1,0 +1,16 @@
+sequenceDiagram
+
+Browser->>Browser: Show Login Page
+Browser->>API: POST Credentials (/api/auth/login)
+API->>API: Verify Credentials
+alt valid credentials
+    API->>Browser: 200 OK (access and refresh tokens)
+    Browser->>Browser: Update auth status
+    Browser->>Browser: Store tokens
+    Browser->>API: GET /api/me (+access token)
+else invalid credentials
+    API->>Browser: 401 Unauthorized
+    Browser->>Browser:Show Login Page
+end
+
+    

@@ -1,0 +1,29 @@
+sequence-diagram
+
+Browser [icon: browser, color: gray]
+API [icon: server, color: blue]
+
+Browser -> Browser: Refresh Page
+Browser -> API: GET /api/me (+access token)
+do [label: /api/me] {
+    API -> API: verify access token
+}
+alt [label: Valid, color: green] {
+    API -> Browser: User Data
+    Browser -> Browser : Update auth status
+}
+alt [label: Invalid, color: red] {
+    API -> Browser: 401
+    Browser -> API: GET /api/auth/refresh (+ refresh token)
+    do [label: /api/auth/refresh] {
+        API-> API: Verify Refresh Token
+    }
+    alt [label: Valid refresh token, color: green] {
+        API -> Browser: new access token
+        Browser -> API: Retry GET /api/me (+acces token)
+    }
+    alt [label: InValid refresh token, color: red] {
+        API -> Browser: 401
+        Browser -> Browser: Show Login Page
+    }
+}

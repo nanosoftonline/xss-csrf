@@ -1,0 +1,20 @@
+sequenceDiagram
+
+Browser->>Browser: Page Refresh
+Browser->>API: GET /api/me (+access token)
+API->>API: Verify access token
+alt valid token
+    API->>Browser: 200 OK (user data)
+    Browser->>Browser: Update auth status
+else invalid token
+    API->>Browser: 401 Unauthorized
+    Browser->>API: GET /api/auth/refresh
+    API->>API: Verify Refresh Token
+    alt valid refresh token
+      API->>Browser:200 OK (new access token)
+      Browser->>API: Retry GET /api/me (+new access token)
+      Browser->>API: Make more calls... (+new access token)
+    else invalid refresh token
+      Browser->>Browser: Show Login Page
+    end
+end

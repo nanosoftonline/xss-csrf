@@ -1,0 +1,23 @@
+sequenceDiagram
+
+participant Browser
+participant API
+
+Browser->>API: call /api/me (+access token) or /api/data/?? (+access token)
+  
+API->>API: Verify access token
+
+alt Valid Access Token
+    API->>Browser: 200 OK (data)
+else Invalid/Expired Access Token
+       API->>Browser: 401 Unauthorized
+       Browser->>API: GET /api/auth/refresh
+       API->>API: Verify Refresh Token      
+    alt Valid Refresh Token
+        API->>Browser: 200 OK (new access token)
+        Browser->>API: Retry call (+new access token)
+    else
+        API->>Browser: 401 (Unauthorized)
+        Browser->>Browser: Show Login Page
+    end
+end

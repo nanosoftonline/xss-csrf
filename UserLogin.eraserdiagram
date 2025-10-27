@@ -1,0 +1,19 @@
+sequence-diagram
+
+Browser [icon: browser, color: gray]
+API [icon: server, color: blue]
+
+Browser -> Browser: Show Login Page
+Browser -> API: POST credentials /api/auth/login
+do [label: "/api/auth/login"] {
+    API -> API: Verify Credetials
+}
+alt [label: Valid Credentials, color: green] {
+    API -> Browser: access and refresh tokens
+    Browser -> Browser : store tokens
+    Browser -> API : GET /api/me (+access token)
+}
+alt [label: Invalid Credentials, color: red] {
+    API -> Browser: 401
+    Browser -> Browser: Show Login Screen
+}
