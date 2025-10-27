@@ -37,7 +37,7 @@ app.post("/api/auth/login", (req, res) => {
     const user = userDB[email]
     if (user && user.password === password) {
         const access_token = jwt.sign({ email: user.name }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' });
-        const refresh_token = jwt.sign({ email: user.name }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
+        const refresh_token = jwt.sign({ email: user.name }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30s' });
         userDB[email].refresh_token = refresh_token;
         res.cookie('refresh_token', refresh_token, {
             secure: true,

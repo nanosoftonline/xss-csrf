@@ -1,5 +1,5 @@
 const API_BASE = "http://localhost:9000"
-import { useAuth } from '../hooks/useAuth'; // Import the store utility
+import { useAuth } from '../hooks/useAuth';
 export async function GET(url: string) {
     const token = localStorage.getItem('token')
     let response = await fetch(`${API_BASE}${url}`, {
@@ -28,15 +28,7 @@ export async function GET(url: string) {
             return GET(url)
         }
 
-        //TODO: need to set the zustand state
-
-        // useAuth.getState().logout();
-        useAuth.getState().logout();
-
-
-
-
-
+        useAuth.getState().setIsLoggedIn(false);
     }
 
 }
@@ -60,8 +52,6 @@ export async function POST(url: string, body: any) {
 
     if (response.status === 401) {
         localStorage.removeItem('token')
-
-
         let refreshResponse = await fetch(`${API_BASE}/api/auth/refresh`, {
             credentials: "include"
         })
@@ -71,18 +61,7 @@ export async function POST(url: string, body: any) {
             localStorage.setItem("token", data.access_token)
             return POST(url, body)
         }
-
-
-        useAuth.getState().logout();
-
-
-
-
-
+        useAuth.getState().setIsLoggedIn(false);
     }
 
 }
-
-
-
-

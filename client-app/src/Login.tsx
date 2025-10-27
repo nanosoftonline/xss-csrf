@@ -5,19 +5,13 @@ export default function Login() {
     const [email, setEmail] = useState('demo@nanosoft.co.za')
     const [password, setPassword] = useState('password')
 
-    // const { login } = useAuth()
-
     async function login() {
         const data = await POST('/api/auth/login', { email, password })
         if (data && data.access_token) {
             localStorage.setItem('token', data.access_token)
             window.location.href = '/'
         }
-
     }
-
-
-
 
     return (
         <div>

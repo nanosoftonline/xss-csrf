@@ -10,8 +10,6 @@ function App() {
   const { isLoggedIn, setIsLoggedIn } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
 
-
-
   async function makeLightWeightProtectedCall() {
     setIsLoggedIn(false)
     const data = await GET('/api/me')
