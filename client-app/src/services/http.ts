@@ -1,7 +1,7 @@
 const API_BASE = "http://localhost:9000"
 import { useAuth } from '../hooks/useAuth';
 export async function GET(url: string) {
-    const token = localStorage.getItem('token')
+    const token = useAuth.getState().accessToken;
     let response = await fetch(`${API_BASE}${url}`, {
         method: 'GET',
         headers: {
@@ -15,7 +15,8 @@ export async function GET(url: string) {
     }
 
     if (response.status === 401) {
-        localStorage.removeItem('token')
+        useAuth.getState().setAccessToken("");
+
 
 
         let refreshResponse = await fetch(`${API_BASE}/api/auth/refresh`, {
@@ -24,7 +25,7 @@ export async function GET(url: string) {
 
         if (refreshResponse.ok) {
             let data = await refreshResponse.json()
-            localStorage.setItem("token", data.access_token)
+            useAuth.getState().setAccessToken(data.access_token);
             return GET(url)
         }
 
@@ -35,7 +36,7 @@ export async function GET(url: string) {
 
 
 export async function POST(url: string, body: any) {
-    const token = localStorage.getItem('token')
+    const token = useAuth.getState().accessToken;
     let response = await fetch(`${API_BASE}${url}`, {
         method: 'POST',
         credentials: "include",
@@ -51,14 +52,14 @@ export async function POST(url: string, body: any) {
     }
 
     if (response.status === 401) {
-        localStorage.removeItem('token')
+        useAuth.getState().setAccessToken("");
         let refreshResponse = await fetch(`${API_BASE}/api/auth/refresh`, {
             credentials: "include"
         })
 
         if (refreshResponse.ok) {
             let data = await refreshResponse.json()
-            localStorage.setItem("token", data.access_token)
+            useAuth.getState().setAccessToken(data.access_token);
             return POST(url, body)
         }
         useAuth.getState().setIsLoggedIn(false);

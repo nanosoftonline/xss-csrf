@@ -3,6 +3,8 @@ import { create } from 'zustand'
 
 export const useAuth = create((set) => ({
     isLoggedIn: false,
-    setIsLoggedIn: (val) => set({ isLoggedIn: val })
+    accessToken: "",
+    setIsLoggedIn: (val) => set({ isLoggedIn: val }),
+    setAccessToken: (val) => set({ accessToken: val })
 }))
 
